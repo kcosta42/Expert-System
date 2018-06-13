@@ -1,17 +1,16 @@
 # *************************************************************************** #
 #                                                                             #
 #                                                        :::      ::::::::    #
-#    test_core.py                                      :+:      :+:    :+:    #
+#    __init__.py                                       :+:      :+:    :+:    #
 #                                                    +:+ +:+         +:+      #
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
-#    Created: 2018/06/13 22:08:43 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/13 22:44:26 by kcosta          ###   ########.fr        #
+#    Created: 2018/06/13 22:15:47 by kcosta           #+#    #+#              #
+#    Updated: 2018/06/13 22:57:46 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
-import expert_system.core as core
+import tests.test_core as test_core
 
-
-def easy_test():
-  return core.resolve("Hello")
+assert(test_core.easy_test() == 'Hello')
+assert(test_core.easy_test() == 'Helo')

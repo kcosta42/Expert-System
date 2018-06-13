@@ -1,27 +1,32 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    vertex.py                                          :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/06/12 13:43:18 by kcosta            #+#    #+#              #
-#    Updated: 2018/06/12 14:25:55 by kcosta           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+# *************************************************************************** #
+#                                                                             #
+#                                                        :::      ::::::::    #
+#    vertex.py                                         :+:      :+:    :+:    #
+#                                                    +:+ +:+         +:+      #
+#    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
+#                                                +#+#+#+#+#+   +#+            #
+#    Created: 2018/06/13 21:21:21 by kcosta           #+#    #+#              #
+#    Updated: 2018/06/13 21:21:44 by kcosta          ###   ########.fr        #
+#                                                                             #
+# *************************************************************************** #
+
 
 class Vertex:
-  """
-    Vertex
+  """Vertex direction from two nodes
 
-    Parameters:
-      origin: Node
-      dest:   Node
+  Parameters
+  ----------
+  origin  : Node
+    The origin node
+  dest    : Node
+    The destination node
 
-    Attribute:
-      _not: boolean
+  Attributes
+  ----------
+  _not: boolean
+    relation NOT between the two node
   """
   def __init__(self, origin, dest):
-    self._origin = origin
-    self._dest = dest
+    self.origin = origin
+    self.dest = dest
     self._not = False
