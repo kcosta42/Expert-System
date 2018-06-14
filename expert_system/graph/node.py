@@ -10,29 +10,33 @@
 #                                                                             #
 # *************************************************************************** #
 
-from expert_system.vertex import Vertex
-
 
 class Node:
   """Node
 
-  Parameters
-  ----------
-  name: string
-    Node's name
-
   Attributes
   ----------
-  _value  : boolean
+  _type:
+    Node type
+  _value: boolean
     Does the node requirement are met
-  _vertice: list of Vertex
-    All relation vertex for this node
+  _nodes: list of Node
+    All relation node for this node
   """
-  def __init__(self, name):
-    self.name = name
+  def __init__(self):
+    self._type = "Node"
     self._value = False
-    self._vertices = []
+    self._nodes = []
 
-  def add_vertex(self, dest):
-    """Create relation between two node"""
-    self._vertices.append(Vertex(self, dest))
+  def __bool__(self):
+    return self._value
+
+  def activate(self):
+    self._value = True
+
+  def desactivate(self):
+    self._value = False
+
+  @property
+  def node_type(self):
+      return self._type

@@ -26,3 +26,18 @@ when needed
 Backtrack from destination to origin to see if
 the destination node is active
 
+Parsing File:
+See example.txt for input example
+
+Scanner:
+get each character from file as well as column and line
+
+Lexer:
+compare character with known characters
+call corresponding function
+
+Token:
+string -> token string
+type -> token type
+int col -> column
+int line -> line

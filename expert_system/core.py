@@ -10,7 +10,7 @@
 #                                                                             #
 # *************************************************************************** #
 
-from expert_system.node import Node
+from expert_system.graph.node import Node
 
 
 def resolve(string):
