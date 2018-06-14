@@ -10,7 +10,6 @@
 #                                                                             #
 # *************************************************************************** #
 
-import tests.test_core as test_core
+import tests.test_core as core
 
-assert(test_core.easy_test() == 'Hello')
-assert(test_core.easy_test() == 'Helo')
+core.scanner_test()

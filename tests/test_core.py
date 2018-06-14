@@ -10,8 +10,12 @@
 #                                                                             #
 # *************************************************************************** #
 
-import expert_system.core as core
+from expert_system.parser.scanner import Scanner
 
 
-def easy_test():
-  return core.resolve("Hello")
+def scanner_test():
+  scan = Scanner('README.md')
+  byte = scan.read()
+  while byte:
+    print("%c" % int(byte), end="")
+    byte = scan.read()
