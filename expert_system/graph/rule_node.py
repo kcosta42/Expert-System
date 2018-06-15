@@ -6,42 +6,69 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 23:55:53 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/14 23:55:57 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/15 17:06:18 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
-from expert_system.graph.node import Node
+from expert_system.graph.node import Node, NODE_TYPE
 
 
 class RuleNode(Node):
   """Node
 
-  Attributes
+  Parameters
   ----------
-  _not: boolean
-    Does the node have the rule NOT
-  _and: boolean
-    Does the node have the rule AND
-  _xor: boolean
-    Does the node have the rule XOR
-  _or: boolean
-    Does the node have the rule OR
+  rule: number
+    Relation rule between this node and his neighbours
   """
-  def __init__(self):
-    self._type = "Rule"
-    self._not = False
-    self._and = False
-    self._xor = False
-    self._or = False
+  def __init__(self, rule):
+    super().__init__(NODE_TYPE['Rule'])
+    self.rule = rule
 
-  def setNot(self):
-    self._not = True
+  def trigger(self):
+    """Trigger all attached nodes to activate them when requirements are met
 
-  def setAnd(self):
-    self._and = True
+    Returns
+    -------
+    True or False
+    """
+    if bool(self):
+      return bool(self)
 
-  def setXor(self):
-    self._xor = True
+    if self.rule == RELATIONS_RULES['!'] or self.rule == RELATIONS_RULES['=>']:
+      self.activate(self._nodes[0].trigger())
 
-  def setOr(self):
-    self._or = True
+    elif self.rule == RELATIONS_RULES['+']:
+      count = 0
+      for node in self._nodes:
+        if not node.trigger():
+          count += 1
+      if count != 0:
+        self.activate(False)
+      else:
+        self.activate(True)
+
+    elif self.rule == RELATIONS_RULES['|']:
+      for node in self._nodes:
+        if node.trigger():
+          self.activate(True)
+
+    elif self.rule == RELATIONS_RULES['^']:
+      count = 0
+      for node in self._nodes:
+        if node.trigger():
+          count += 1
+      if count != 1:
+        self.activate(False)
+      else:
+        self.activate(True)
+
+    return bool(self)
+
+RELATIONS_RULES = {
+  '!': 0,
+  '+': 1,
+  '^': 2,
+  '|': 3,
+  '=>': 4,
+}

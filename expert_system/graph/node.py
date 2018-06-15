@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/13 21:21:56 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/14 23:55:49 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/15 16:40:28 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -14,29 +14,35 @@
 class Node:
   """Node
 
+  Parameters
+  ----------
+  type: number
+    Node type
+
   Attributes
   ----------
-  _type:
-    Node type
-  _value: boolean
+  _activate: boolean
     Does the node requirement are met
   _nodes: list of Node
     All relation node for this node
   """
-  def __init__(self):
-    self._type = "Node"
-    self._value = False
+  def __init__(self, type):
+    self.type = type
+    self._activate = False
     self._nodes = []
 
   def __bool__(self):
-    return self._value
+    return self._activate
 
-  def activate(self):
-    self._value = True
+  def activate(self, value):
+    self._activate = value
 
-  def desactivate(self):
-    self._value = False
+  def connect(self, other):
+    self._nodes.append(other)
 
-  @property
-  def node_type(self):
-      return self._type
+
+NODE_TYPE = {
+  "Node": 0,
+  "Fact": 1,
+  "Rule": 2,
+}

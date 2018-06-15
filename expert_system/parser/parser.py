@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:30 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/14 23:12:06 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/15 11:18:13 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -25,13 +25,14 @@ class Parser:
   ----------
   _lexer: object
     Lexer object for parsing the file
+
+  Exceptions:
+  -----------
+  OSError if could not open filename
+  KeyError if unknown symbol met in file
   """
   def __init__(self, filename):
     self._lexer = Lexer(filename)
 
   def parse(self):
-    try:
-      self._lexer.lexer()
-    except Exception as e:
-      print("{}".format(e))
-      exit(-2)
+    self._lexer.lexer()

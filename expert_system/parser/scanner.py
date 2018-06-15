@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:22 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/14 23:40:42 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/15 11:19:57 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -27,16 +27,16 @@ class Scanner:
     current column in file
   _line   : number
     current line in file
+
+  Exceptions:
+  -----------
+  OSError if could not open filename
   """
   def __init__(self, filename):
     self.filename = filename
     self._column = 0
     self._line = 1
-    try:
-      self._file = open(self.filename, "r")
-    except IOError as e:
-      print("%s" % e)
-      exit(-1)
+    self._file = open(self.filename, "r")
 
   def __del__(self):
     try:

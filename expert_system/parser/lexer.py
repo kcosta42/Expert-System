@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:39 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/14 23:41:49 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/15 16:18:08 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -16,7 +16,7 @@ from expert_system.parser.token import Token, TOKEN_TYPE
 COMMENT_CHAR = '#'
 WHITESPACE_CHARS = "\t\n\v\f\r "
 NEWLINE_CHAR = '\n'
-SYMBOL_CHARS = "+()!^|=>?"
+SYMBOL_CHARS = "+()!^|<=>?"
 FACT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
@@ -32,6 +32,11 @@ class Lexer:
   ----------
   _scan: object
     Scanner object for parsing the file
+
+  Exceptions:
+  -----------
+  OSError if could not open filename
+  KeyError if unknown symbol met in file
   """
   def __init__(self, filename):
     self._scan = Scanner(filename)
