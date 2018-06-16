@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:39 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/15 16:18:08 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/15 23:18:10 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -16,7 +16,7 @@ from expert_system.parser.token import Token, TOKEN_TYPE
 COMMENT_CHAR = '#'
 WHITESPACE_CHARS = "\t\n\v\f\r "
 NEWLINE_CHAR = '\n'
-SYMBOL_CHARS = "+()!^|<=>?"
+SYMBOL_CHARS = "+()!^|=>?"
 FACT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
@@ -48,6 +48,10 @@ class Lexer:
     Returns
     -------
     token: object
+
+    Exceptions:
+    -----------
+    KeyError if unknown symbol met in file
     """
     if not self._char:
       return Token(TOKEN_TYPE['EOF'])
@@ -62,11 +66,15 @@ class Lexer:
     elif self._char in FACT_CHARS:
       return self.fact_token()
     else:
-      raise Exception(
-        "Unknown symbol '{}' at Ln {}, Col {}".format(self._char,
-                                                      self._scan.line,
-                                                      self._scan.column)
-      )
+      self.raise_KeyError()
+
+  def raise_KeyError(self):
+    """Exception KeyError is raised when callling this function"""
+    raise KeyError(
+      "Unknown symbol '{}' at Ln {}, Col {}".format(self._char,
+                                                    self._scan.line,
+                                                    self._scan.column)
+    )
 
   def comment_token(self):
     """Return Comment Token"""
@@ -89,6 +97,9 @@ class Lexer:
     token = Token(TOKEN_TYPE['Symbol'])
     token = token + self._char
     self._char = self._scan.read()
+    if token == '=' and self._char == '>':
+      token = token + self._char
+      self._char = self._scan.read()
     return token
 
   def fact_token(self):

@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/15 17:40:14 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/15 17:40:18 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/16 02:14:33 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -32,7 +32,7 @@ def node_easy_test():
   fB.activate(True)
 
   print("?C\n")
-  fC.trigger()
+  fC.evaluate()
 
   print("C:{}".format(bool(fC)))
 
@@ -122,10 +122,10 @@ def node_hard_test():
   fP.activate(True)
 
   print("?AFKP\n")
-  fA.trigger()
-  fF.trigger()
-  fK.trigger()
-  fP.trigger()
+  fA.evaluate()
+  fF.evaluate()
+  fK.evaluate()
+  fP.evaluate()
 
   print("A:{}".format(bool(fA)))
   print("F:{}".format(bool(fF)))

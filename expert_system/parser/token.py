@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:46 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/14 23:27:11 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/16 00:27:00 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -18,8 +18,6 @@ class Token:
   ----------
   type : number
     Token type
-  char : char
-    First character of token representation
 
   Attributes
   ----------
@@ -32,11 +30,20 @@ class Token:
     self._value = ''
 
   def __str__(self):
-    return '<Token {}> : "{}"'.format(self.type, self._value)
+    return '{}'.format(self._value)
 
   def __add__(self, other):
     self._value = self._value + other
     return self
+
+  def __eq__(self, other):
+    return self._value == other
+
+  def clone(self):
+    """Return Token clone"""
+    token = Token(self.type)
+    token._value = self._value
+    return token
 
 TOKEN_TYPE = {
   "EOF": 0,

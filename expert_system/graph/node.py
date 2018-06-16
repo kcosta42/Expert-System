@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/13 21:21:56 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/15 16:40:28 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/16 02:12:46 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -39,6 +39,11 @@ class Node:
 
   def connect(self, other):
     self._nodes.append(other)
+
+  def reset(self):
+    for node in self._nodes:
+      node.reset()
+    self._activate = False
 
 
 NODE_TYPE = {

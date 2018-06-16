@@ -1,0 +1,11 @@
+# Multiple same conclusion rule
+
+B => A
+C => A
+
+=C
+
+?A
+
+# Result should be
+# A:True

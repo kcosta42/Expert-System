@@ -1,12 +1,4 @@
-Node:
-Facts nodes which correspond to fact
-Rules nodes which link facts node together
-
-Keep track of all Fact Node to activate them
-when needed
-
-Backtrack from destination to origin to see if
-the destination node is active
+Keep track of all Fact Node to activate them when needed
 
 Before inserting, check if this node while not create conflict
 

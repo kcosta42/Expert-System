@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 23:55:44 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/15 17:06:37 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/16 12:56:06 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -25,18 +25,21 @@ class FactNode(Node):
     super().__init__(NODE_TYPE['Fact'])
     self.name = name
 
-  def trigger(self):
-    """Trigger all attached nodes to activate them when requirements are met
+  def __str__(self):
+    return self.name
+
+  def evaluate(self, origin=None):
+    """Evaluate all attached nodes to activate them when requirements are met
 
     Returns
     -------
     True of False
     """
-    if bool(self):
+    if bool(self) or origin == self:
       return bool(self)
 
     for node in self._nodes:
-      if node.trigger():
+      if node.evaluate(origin if origin is not None else self):
         self.activate(True)
 
     return bool(self)
