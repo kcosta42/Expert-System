@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:46 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/16 00:27:00 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/17 00:25:43 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -23,11 +23,15 @@ class Token:
   ----------
   _value: string
     Token string representation
+  _result: boolean
+    True if this token is after an Implies Token
+    ie. A => B + C
   """
 
   def __init__(self, type):
     self.type = type
     self._value = ''
+    self._result = False
 
   def __str__(self):
     return '{}'.format(self._value)
@@ -43,6 +47,7 @@ class Token:
     """Return Token clone"""
     token = Token(self.type)
     token._value = self._value
+    token._result = self._result
     return token
 
 TOKEN_TYPE = {

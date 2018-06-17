@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 23:55:53 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/16 12:56:11 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/17 19:34:23 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -31,13 +31,19 @@ class RuleNode(Node):
   def evaluate(self, origin):
     """Evaluate all attached nodes to activate them when requirements are met
 
+    Parameters
+    ----------
+    origin: list of Node
+      List of already parse node
+
     Returns
     -------
     True or False
     """
-    if bool(self) or origin == self:
+    if bool(self):
       return bool(self)
 
+    origin.append(self)
     if self.rule == RELATIONS_RULES['!']:
       self.activate(not self._nodes[0].evaluate(origin))
 

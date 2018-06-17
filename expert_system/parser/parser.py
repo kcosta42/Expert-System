@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:30 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/16 12:58:07 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/17 22:02:11 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -35,6 +35,13 @@ class Parser:
     List of all Fact Node for tracking
   _queries: list of Node
     List of all Queries Node
+  _rules  : list of list of Token
+    List of all parsed rules in Reverse Polish notation
+
+  Static Attributes
+  -----------------
+  Verbose: boolean
+    Print log if True
 
   Exceptions:
   -----------
@@ -42,10 +49,14 @@ class Parser:
   KeyError if unknown symbol met in file
   IndexError if mismatched parentheses
   """
+  Verbose = False
+
   def __init__(self, filename):
     self._lexer = Lexer(filename)
     self._token = Token(TOKEN_TYPE['Newline'])
     self._nodes = []
+    self._queries = []
+    self._rules = []
 
   def parse(self):
     """Parse file and create all node connections
@@ -62,13 +73,39 @@ class Parser:
           self.parse_initial_facts()
         elif self._token == '?':
           self.parse_queries()
-        elif self._token == '(' or self._token == ')':
+        elif self._token == '(' or self._token == ')' or self._token == '!':
           self.parse_fact()
         else:
           self._lexer.raise_KeyError()
 
       elif self._token.type == TOKEN_TYPE['Fact']:
         self.parse_fact()
+
+  def check_conflict(self, postfix_exp):
+    for rules in self._rules:
+
+      j = 0
+      diff = False
+      hasNotToken = False
+      for i in range(0, len(rules)):
+        while postfix_exp[j] == '!' and postfix_exp[j]._result:
+          hasNotToken = True
+          j += 1
+          if (j >= len(postfix_exp)):
+            break
+        if postfix_exp[j] != rules[i]:
+          diff = True
+          break
+        j += 1
+        if (j >= len(postfix_exp)):
+          break
+      if not diff and hasNotToken:
+        raise KeyError('Conflicting rules detected')
+      elif not diff:
+        return 1
+
+    self._rules.append(postfix_exp[0:])
+    return 0
 
   def create_nodes(self, postfix_exp):
     """Create nodes from postfix expression
@@ -82,6 +119,8 @@ class Parser:
     ----------
     IndexError if mismatched number of arguments
     """
+    if self.check_conflict(postfix_exp):
+      return
 
     stack = []
     for token in postfix_exp:
@@ -108,13 +147,20 @@ class Parser:
 
         elif token == '!':
           invert = stack.pop()
-          node.connect(invert)
+          if token._result:
+            invert.connect(node)
+          else:
+            node.connect(invert)
 
         else:
           lhs = stack.pop()
           rhs = stack.pop()
-          node.connect(lhs)
-          node.connect(rhs)
+          if token._result:
+            lhs.connect(node)
+            rhs.connect(node)
+          else:
+            node.connect(lhs)
+            node.connect(rhs)
         stack.append(node)
 
   def parse_fact(self):
@@ -127,25 +173,37 @@ class Parser:
     """
     output_queue = []
     operator_stack = []
+    parsing_result = False
 
     while self._token.type != TOKEN_TYPE['Newline']:
 
       if self._token.type == TOKEN_TYPE['Fact']:
+        print(self._token, end=" ") if Parser.Verbose else None
         output_queue.append(self._token.clone())
 
       elif self._token.type == TOKEN_TYPE['Symbol']:
+        print(self._token, end=" ") if Parser.Verbose else None
         if self._token == '?' or self._token == '=' or self._token == '>':
           self._lexer.raise_KeyError()
+
         elif self._token == '(':
           operator_stack.append(self._token.clone())
+
         elif self._token == ')':
           while operator_stack[-1] != '(':
             output_queue.append(operator_stack.pop())
           operator_stack.pop()
+
         else:
+          if self._token == '=>':
+            if not parsing_result:
+              parsing_result = True
+            else:
+              self._lexer.raise_KeyError()
+
           while (len(operator_stack) != 0 and
                   operator_stack[-1] != '(' and
-                  RELATIONS_RULES[operator_stack[-1]._value] >=
+                  RELATIONS_RULES[operator_stack[-1]._value] >  # >=
                   RELATIONS_RULES[self._token._value]):
             output_queue.append(operator_stack.pop())
           operator_stack.append(self._token.clone())
@@ -154,12 +212,14 @@ class Parser:
         self._lexer.raise_KeyError()
 
       self._token = self._lexer.lexer()
+      self._token._result = parsing_result
 
     for op in reversed(operator_stack):
       if op == '(' or op == ')':
         raise IndexError('Mismatched parentheses')
       output_queue.append(op)
 
+    print() if Parser.Verbose else None
     self.create_nodes(output_queue)
 
   def parse_initial_facts(self):
@@ -169,13 +229,16 @@ class Parser:
     ----------
     KeyError if node not found
     """
-    # for node in self._nodes:
-    #   node.reset()
+    print("\n=", end="") if Parser.Verbose else None
+
+    for node in self._nodes:
+      node.reset([])
 
     self._token = self._lexer.lexer()
     while self._token.type != TOKEN_TYPE['Newline']:
 
       if self._token.type == TOKEN_TYPE['Fact']:
+        print(self._token, end="") if Parser.Verbose else None
         self.find_node(self._token).activate(True)
 
       elif self._token.type != TOKEN_TYPE['Whitespace']:
@@ -194,9 +257,12 @@ class Parser:
     self._token = self._lexer.lexer()
     self._queries = []
 
+    print("\n?", end="") if Parser.Verbose else None
+
     while self._token.type != TOKEN_TYPE['Newline']:
 
       if self._token.type == TOKEN_TYPE['Fact']:
+        print(self._token, end="") if Parser.Verbose else None
         self._queries.append(self.find_node(self._token))
 
       elif self._token.type == TOKEN_TYPE['EOF']:
@@ -207,9 +273,17 @@ class Parser:
 
       self._token = self._lexer.lexer()
 
+    self.evaluate_queries()
+
   def evaluate_queries(self):
+    """Evaluate Queries"""
+    print() if Parser.Verbose else None
+
+    for node in self._nodes:
+      node.evaluate([])
+
     for node in self._queries:
-      node.evaluate()
+      node.evaluate([])
       print("{}:{}".format(node.name, bool(node)))
 
   def find_node(self, name):

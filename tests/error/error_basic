@@ -1,0 +1,9 @@
+# Error basic
+
+A + B => A
+B | A => B
+
+=A
+?B
+# Result should be
+# Error ?

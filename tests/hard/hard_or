@@ -7,6 +7,7 @@ C => E
 A => D
 A => E
 
-=A
-
+=
 ?C
+# Result should be
+# C:False

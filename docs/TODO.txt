@@ -1,6 +1,1 @@
-Keep track of all Fact Node to activate them when needed
-
 Before inserting, check if this node while not create conflict
-
-Parsing File:
-See example.txt for input example

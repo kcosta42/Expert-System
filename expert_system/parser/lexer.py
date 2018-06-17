@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/14 18:18:39 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/15 23:18:10 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/17 23:15:32 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -32,6 +32,10 @@ class Lexer:
   ----------
   _scan: object
     Scanner object for parsing the file
+  _char: chr
+    Next character read
+  _token: object
+    Current Token read
 
   Exceptions:
   -----------
@@ -47,72 +51,74 @@ class Lexer:
 
     Returns
     -------
-    token: object
+    _token: object
 
     Exceptions:
     -----------
     KeyError if unknown symbol met in file
     """
     if not self._char:
-      return Token(TOKEN_TYPE['EOF'])
+      self._token = Token(TOKEN_TYPE['EOF'])
     elif self._char == COMMENT_CHAR:
-      return self.comment_token()
+      self.comment_token()
     elif self._char == NEWLINE_CHAR:
-      return self.newline_token()
+      self.newline_token()
     elif self._char in WHITESPACE_CHARS:
-      return self.whitespace_token()
+      self.whitespace_token()
     elif self._char in SYMBOL_CHARS:
-      return self.symbol_token()
+      self.symbol_token()
     elif self._char in FACT_CHARS:
-      return self.fact_token()
+      self.fact_token()
     else:
       self.raise_KeyError()
+
+    return self._token
 
   def raise_KeyError(self):
     """Exception KeyError is raised when callling this function"""
     raise KeyError(
-      "Unknown symbol '{}' at Ln {}, Col {}".format(self._char,
+      "Unknown symbol '{}' at Ln {}, Col {}".format(self._token,
                                                     self._scan.line,
                                                     self._scan.column)
     )
 
   def comment_token(self):
-    """Return Comment Token"""
+    """Set Comment Token"""
     token = Token(TOKEN_TYPE['Comment'])
     while self._char and self._char != NEWLINE_CHAR:
       token = token + self._char
       self._char = self._scan.read()
-    return token
+    self._token = token
 
   def whitespace_token(self):
-    """Return Whitespace Token"""
+    """Set Whitespace Token"""
     token = Token(TOKEN_TYPE['Whitespace'])
     while self._char in WHITESPACE_CHARS:
       token = token + self._char
       self._char = self._scan.read()
-    return token
+    self._token = token
 
   def symbol_token(self):
-    """Return Symbol Token"""
+    """Set Symbol Token"""
     token = Token(TOKEN_TYPE['Symbol'])
     token = token + self._char
     self._char = self._scan.read()
     if token == '=' and self._char == '>':
       token = token + self._char
       self._char = self._scan.read()
-    return token
+    self._token = token
 
   def fact_token(self):
-    """Return Fact Token"""
+    """Set Fact Token"""
     token = Token(TOKEN_TYPE['Fact'])
     token = token + self._char
     self._char = self._scan.read()
-    return token
+    self._token = token
 
   def newline_token(self):
-    """Return Newline Token"""
+    """Set Newline Token"""
     token = Token(TOKEN_TYPE['Newline'])
     token = token + self._char
     while self._char == NEWLINE_CHAR:
       self._char = self._scan.read()
-    return token
+    self._token = token

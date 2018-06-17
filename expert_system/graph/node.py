@@ -6,7 +6,7 @@
 #    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
 #                                                +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/13 21:21:56 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/16 02:12:46 by kcosta          ###   ########.fr        #
+#    Updated: 2018/06/17 19:03:18 by kcosta          ###   ########.fr        #
 #                                                                             #
 # *************************************************************************** #
 
@@ -35,15 +35,26 @@ class Node:
     return self._activate
 
   def activate(self, value):
+    """Activate node"""
     self._activate = value
 
   def connect(self, other):
+    """Link node to another node"""
     self._nodes.append(other)
 
-  def reset(self):
-    for node in self._nodes:
-      node.reset()
+  def reset(self, origin):
+    """Reset node
+
+    Parameters
+    ----------
+    origin: list of Node
+      List of already parse node
+    """
     self._activate = False
+    origin.append(self)
+    for node in self._nodes:
+      if node not in origin:
+        node.reset(origin)
 
 
 NODE_TYPE = {

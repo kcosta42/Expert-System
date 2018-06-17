@@ -3,5 +3,7 @@
 A => B + C
 
 =A
-
 ?BC
+# Result should be
+# B:True
+# C:True
