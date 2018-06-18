@@ -163,23 +163,25 @@ class Parser:
             node.connect(rhs)
         stack.append(node)
 
-  def parse_biconditional_fact(self, exp):
+  def parse_biconditional_fact(self, rev_exp):
     """Parse all biconditional fact from expression
-  
+
+    Parameters
+    ----------
+    rev_exp: List of Token
+      Expression reversed
+
     Exceptions
     ----------
     KeyError if node not found
     IndexError if mismatched parentheses
     """
-    rev = exp[0::]
-    for i in range(0, len(rev)):
-      rev[i]._result = False
-      
     output_queue = []
     operator_stack = []
     parsing_result = False
 
-    for token in rev:
+    for token in rev_exp:
+      token._result = parsing_result
 
       if token.type == TOKEN_TYPE['Fact']:
         output_queue.append(token)
@@ -210,18 +212,14 @@ class Parser:
             output_queue.append(operator_stack.pop())
           operator_stack.append(token)
 
-      self._token = self._lexer.lexer()
-      self._token._result = parsing_result
-
     for op in reversed(operator_stack):
       if op == '(' or op == ')':
         raise IndexError('Mismatched parentheses')
       output_queue.append(op)
 
-    print() if Parser.Verbose else None
     self.create_nodes(output_queue)
-  
-   
+
+
   def parse_fact(self):
     """Parse all facts and create a postfix expression
 
@@ -230,18 +228,22 @@ class Parser:
     KeyError if node not found
     IndexError if mismatched parentheses
     """
+    expression = []
     output_queue = []
     operator_stack = []
     parsing_result = False
+    is_biconditional = False
 
     while self._token.type != TOKEN_TYPE['Newline']:
 
       if self._token.type == TOKEN_TYPE['Fact']:
         print(self._token, end=" ") if Parser.Verbose else None
+        expression.append(self._token.clone())
         output_queue.append(self._token.clone())
 
       elif self._token.type == TOKEN_TYPE['Symbol']:
         print(self._token, end=" ") if Parser.Verbose else None
+        expression.append(self._token.clone())
         if self._token == '?' or self._token == '=' or self._token == '>':
           self._lexer.raise_KeyError()
 
@@ -256,6 +258,7 @@ class Parser:
         else:
           if self._token == '=>' or self._token == '<=>':
             if not parsing_result:
+              is_biconditional = self._token == '<=>'
               parsing_result = True
             else:
               self._lexer.raise_KeyError()
@@ -280,6 +283,9 @@ class Parser:
 
     print() if Parser.Verbose else None
     self.create_nodes(output_queue)
+
+    if is_biconditional:
+      self.parse_biconditional_fact(expression[::-1])
 
   def parse_initial_facts(self):
     """Activate all initial facts nodes

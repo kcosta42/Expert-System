@@ -13,4 +13,4 @@ C => !D
 =C
 ?D
 # Result should be
-# B:True
+# D:False
