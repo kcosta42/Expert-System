@@ -138,7 +138,7 @@ class Parser:
       elif token.type == TOKEN_TYPE['Symbol']:
         node = RuleNode(RELATIONS_RULES[token._value])
 
-        if token == '=>':
+        if token == '=>' or token == '<=>':
           result = stack.pop()
           trigger = stack.pop()
           node.connect(trigger)
@@ -163,6 +163,65 @@ class Parser:
             node.connect(rhs)
         stack.append(node)
 
+  def parse_biconditional_fact(self, exp):
+    """Parse all biconditional fact from expression
+  
+    Exceptions
+    ----------
+    KeyError if node not found
+    IndexError if mismatched parentheses
+    """
+    rev = exp[0::]
+    for i in range(0, len(rev)):
+      rev[i]._result = False
+      
+    output_queue = []
+    operator_stack = []
+    parsing_result = False
+
+    for token in rev:
+
+      if token.type == TOKEN_TYPE['Fact']:
+        output_queue.append(token)
+
+      elif token.type == TOKEN_TYPE['Symbol']:
+        if token == '?' or token == '=' or token == '>' or token == '=>':
+          self._lexer.raise_KeyError()
+
+        elif token == '(':
+          operator_stack.append(token)
+
+        elif token == ')':
+          while operator_stack[-1] != '(':
+            output_queue.append(operator_stack.pop())
+          operator_stack.pop()
+
+        else:
+          if token == '<=>':
+            if not parsing_result:
+              parsing_result = True
+            else:
+              self._lexer.raise_KeyError()
+
+          while (len(operator_stack) != 0 and
+                  operator_stack[-1] != '(' and
+                  RELATIONS_RULES[operator_stack[-1]._value] >  # >=
+                  RELATIONS_RULES[token._value]):
+            output_queue.append(operator_stack.pop())
+          operator_stack.append(token)
+
+      self._token = self._lexer.lexer()
+      self._token._result = parsing_result
+
+    for op in reversed(operator_stack):
+      if op == '(' or op == ')':
+        raise IndexError('Mismatched parentheses')
+      output_queue.append(op)
+
+    print() if Parser.Verbose else None
+    self.create_nodes(output_queue)
+  
+   
   def parse_fact(self):
     """Parse all facts and create a postfix expression
 
@@ -195,7 +254,7 @@ class Parser:
           operator_stack.pop()
 
         else:
-          if self._token == '=>':
+          if self._token == '=>' or self._token == '<=>':
             if not parsing_result:
               parsing_result = True
             else:

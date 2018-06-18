@@ -49,6 +49,8 @@ class RuleNode(Node):
 
     elif self.rule == RELATIONS_RULES['=>']:
       self.activate(self._nodes[0].evaluate(origin))
+    elif self.rule == RELATIONS_RULES['<=>']:
+      self.activat=(self._nodes[0].evaluate(origin))
 
     elif self.rule == RELATIONS_RULES['+']:
       count = 0
@@ -83,7 +85,8 @@ RELATIONS_RULES = {
 }
 
 RULES_STR = {
-  1: 'Implies',
+	0: 'Implies only if',
+	1: 'Implies',
   2: 'XOR',
   3: 'OR',
   4: 'AND',

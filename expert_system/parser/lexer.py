@@ -16,7 +16,7 @@ from expert_system.parser.token import Token, TOKEN_TYPE
 COMMENT_CHAR = '#'
 WHITESPACE_CHARS = "\t\n\v\f\r "
 NEWLINE_CHAR = '\n'
-SYMBOL_CHARS = "+()!^|=>?"
+SYMBOL_CHARS = "+()!^|<=>?"
 FACT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
@@ -103,7 +103,20 @@ class Lexer:
     token = Token(TOKEN_TYPE['Symbol'])
     token = token + self._char
     self._char = self._scan.read()
-    if token == '=' and self._char == '>':
+    if token == '>':
+      self.raise_KeyError()
+      
+    elif token == '<':
+      if self._char != '=':
+        self.raise_KeyError()
+      token = token + self._char
+      self._char = self._scan.read()
+      if self._char != '>':
+        self.raise_KeyError()
+      token = token + self._char
+      self._char = self._scan.read()
+      
+    elif token == '=' and self._char == '>':
       token = token + self._char
       self._char = self._scan.read()
     self._token = token
