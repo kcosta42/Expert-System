@@ -1,1 +1,0 @@
-Before inserting, check if this node while not create conflict
