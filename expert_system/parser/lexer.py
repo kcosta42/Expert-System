@@ -1,15 +1,3 @@
-# *************************************************************************** #
-#                                                                             #
-#                                                        :::      ::::::::    #
-#    lexer.py                                          :+:      :+:    :+:    #
-#                                                    +:+ +:+         +:+      #
-#    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
-#                                                +#+#+#+#+#+   +#+            #
-#    Created: 2018/06/14 18:18:39 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/17 23:15:32 by kcosta          ###   ########.fr        #
-#                                                                             #
-# *************************************************************************** #
-
 from expert_system.parser.scanner import Scanner
 from expert_system.parser.token import Token, TOKEN_TYPE
 
@@ -44,6 +32,8 @@ class Lexer:
   """
   def __init__(self, filename):
     self._scan = Scanner(filename)
+
+  def init_read(self):
     self._char = self._scan.read()
 
   def lexer(self):

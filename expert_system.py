@@ -9,5 +9,7 @@ if __name__ == '__main__':
                       help="input file")
   parser.add_argument("-q", "--quiet", action="store_true",
                       help="Remove all output except result")
+  parser.add_argument("-i", "--interactive", action="store_true",
+                      help="Enable interative mode")
   args = parser.parse_args()
-  core.parse_file(args.file, args.quiet)
+  core.parse_file(args.file, args.quiet, args.interactive)

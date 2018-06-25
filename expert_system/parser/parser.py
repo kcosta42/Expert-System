@@ -1,15 +1,3 @@
-# *************************************************************************** #
-#                                                                             #
-#                                                        :::      ::::::::    #
-#    parser.py                                         :+:      :+:    :+:    #
-#                                                    +:+ +:+         +:+      #
-#    By: kcosta <kcosta@student.42.fr>             +#+  +:+       +#+         #
-#                                                +#+#+#+#+#+   +#+            #
-#    Created: 2018/06/14 18:18:30 by kcosta           #+#    #+#              #
-#    Updated: 2018/06/17 22:02:11 by kcosta          ###   ########.fr        #
-#                                                                             #
-# *************************************************************************** #
-
 from expert_system.graph.fact_node import FactNode
 from expert_system.graph.rule_node import RuleNode, RELATIONS_RULES
 
@@ -65,6 +53,8 @@ class Parser:
     ----------
     KeyError if node not found
     """
+    self._token = Token(TOKEN_TYPE['Newline'])
+    self._lexer.init_read()
     while self._token.type != TOKEN_TYPE['EOF']:
       self._token = self._lexer.lexer()
 
