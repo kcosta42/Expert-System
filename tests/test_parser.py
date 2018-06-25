@@ -51,6 +51,7 @@ def lexer_failed_test():
 def lexer_test():
   lexer = Lexer('./tests/hard/hard_all')
   try:
+    lexer.init_read()
     token = lexer.lexer()
     while token.type != TOKEN_TYPE['EOF']:
       if token.type != TOKEN_TYPE['Whitespace']:
