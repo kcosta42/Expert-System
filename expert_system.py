@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import argparse
 import expert_system.core as core
 
